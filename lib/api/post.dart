@@ -1,9 +1,9 @@
 class Wovpost {
   final int id;
   final String title;
-  final String? description;
   final double latitude;
   final double longitude;
+  final String category;
   final String? image;
 
   // etc. (Agregar los campos que se necesiten)
@@ -13,7 +13,7 @@ class Wovpost {
     required this.title,
     required this.latitude,
     required this.longitude,
-    this.description,
+    required this.category,
     this.image,
   });
 
@@ -23,10 +23,21 @@ class Wovpost {
       title: json['title'] as String,
       latitude: json['latitude'] as double,
       longitude: json['longitude'] as double,
-      description: json['description'] as String?,
+      category: ApiCategory.fromJson(json['category']).name,
       image: json['image'] as String?,
-
       // etc. (Agregar los campos que se necesiten)
     );
+  }
+}
+
+class ApiCategory {
+  final String name;
+
+  const ApiCategory({
+    required this.name
+  });
+
+  factory ApiCategory.fromJson (Map<String,dynamic> json) {
+    return ApiCategory(name: json['name'] as String);
   }
 }

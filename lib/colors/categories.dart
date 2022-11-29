@@ -12,6 +12,22 @@ class Categories {
     var list = [accident, serviceCut, protest, transportProblem, robbery, noises];
     return list;
   }
+
+  static Category getCategory(String title) {
+    if (title == accident.name) {
+      return accident;
+    } else if (title == serviceCut.name) {
+      return serviceCut;
+    } else if (title == protest.name) {
+      return protest;
+    } else if (title == transportProblem.name) {
+      return transportProblem;
+    } else if (title == robbery.name) {
+      return robbery;
+    } else {
+      return noises;
+    }
+  }
 }
 
 class Category {
