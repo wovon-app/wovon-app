@@ -14,10 +14,12 @@ class IncidentListItem extends StatelessWidget {
 
     final TextStyle titleStyle = TextStyle(
       fontSize: 20.0,
+      fontWeight: FontWeight.bold,
+      height: 1.2,
       color: theme.colorScheme.onSurfaceVariant,
     );
     final TextStyle distanceStyle = TextStyle(
-      fontSize: 13.0,
+      fontSize: 12.0,
       color: theme.colorScheme.onSurfaceVariant.withOpacity(0.87),
     );
     final TextStyle typeStyle = TextStyle(
@@ -26,41 +28,43 @@ class IncidentListItem extends StatelessWidget {
     );
 
     return Card(
-      elevation: 0,
+      elevation: 3,
       color: theme.colorScheme.surfaceVariant,
       clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(post.title, style: titleStyle),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8, bottom: 8),
+                    child: Text(post.title, style: titleStyle),
+                  )
+                ),
                 Text(_distanceString(), style: distanceStyle),
               ],
             ),
-          ),
-          Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
+            Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: const BorderRadius.all(Radius.circular(6))
+              ),
+              child: Image.network(
+                "https://media.npr.org/assets/img/2021/06/08/20210607_184450-2e240569e1dc66bcff31f74bc88fb1d5c301686b.jpg",
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 200,
               ),
             ),
-            child: Image.network(
-              "https://media.npr.org/assets/img/2021/06/08/20210607_184450-2e240569e1dc66bcff31f74bc88fb1d5c301686b.jpg",
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: 200,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

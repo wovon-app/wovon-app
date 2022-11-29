@@ -1,62 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:wovon_app/colors/categories.dart';
 
 class WovonAppBar extends StatelessWidget {
   const WovonAppBar({super.key});
 
-  static const filters = [
-    "Accidente de tránsito",
-    "Corte de servicio",
-    "Manifestación",
-    "Problema en transporte público",
-    "Robo",
-    "Ruidos molestos"
-  ];
+  static var filters = Categories.getCategories();
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Material(
-      elevation: 2,
-      color: theme.colorScheme.surface,
-      surfaceTintColor: theme.colorScheme.surfaceTint,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 64,
-            child: Center(
-              child: Text(
-                'Wovon',
-                style: theme.textTheme.titleLarge!.copyWith(
-                  color: theme.colorScheme.onSurface,
+    return Scaffold(
+      body: SafeArea(
+        child: Material(
+          elevation: 2,
+          shadowColor: Colors.black,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const SizedBox(height: 8),
+              FractionallySizedBox(
+                widthFactor: 0.4,
+                child: Center(
+                  child: Image.asset('assets/images/logo_fc.png',),
                 ),
               ),
-            ),
+              const _FilterList(),
+            ],
           ),
-          _filterList(context),
-        ],
+        ),
       ),
     );
   }
+}
 
-  Widget _filterList(BuildContext context) {
+class _FilterList extends StatefulWidget {
+  const _FilterList({super.key});
+
+  @override
+  State<_FilterList> createState() => _FilterListState();
+}
+
+class _FilterListState extends State<_FilterList> {
+  List<Category>? categories;
+  List<bool>? selected;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      categories = Categories.getCategories();
+    });
+    setState(() {
+      selected = [false, false, false, false, false, false];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Flexible(
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: Chip(
-            backgroundColor: theme.colorScheme.surfaceVariant,
+          child: ActionChip(
+            side: const BorderSide(style: BorderStyle.none),
+            elevation: 5.0,
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
+            backgroundColor: selected![index] ? categories![index].darkColor : categories![index].lightColor,
             label: Text(
-              filters[index],
+              categories![index].name,
               style: theme.textTheme.labelLarge!.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: selected![index] ? const Color(0xFFFFFFFF) : categories![index].darkColor,
               ),
             ),
+            onPressed: () {
+              setState(() {
+                selected![index] = !selected![index];
+              });
+            },
           ),
         ),
-        itemCount: filters.length,
+        itemCount: categories!.length,
       ),
     );
   }

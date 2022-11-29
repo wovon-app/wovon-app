@@ -62,7 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget incidentList() => Flexible(
-          child: ListView.builder(
+      child: ListView.builder(
         itemBuilder: (context, index) {
           var wovpost = _wovposts![index];
           return IncidentListItem(
@@ -72,7 +72,8 @@ class _DashboardPageState extends State<DashboardPage> {
         padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
         clipBehavior: Clip.none,
         shrinkWrap: true,
-      ));
+      )
+  );
 
   int _distanceTo(Wovpost wovpost) {
     return Geolocator.distanceBetween(_gpsPos!.latitude, _gpsPos!.longitude,
