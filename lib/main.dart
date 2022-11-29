@@ -3,6 +3,7 @@ import '../map/page.dart';
 import 'dashboard/page.dart';
 import 'appbar.dart';
 import 'package:custom_floating_action_button/custom_floating_action_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const WovonApp());
@@ -68,8 +69,11 @@ class _WovonAppState extends State<WovonApp> {
           closeFloatingActionButton: const Icon(Icons.close, color: Colors.white),
           options: [
             GestureDetector(
-              onTap: () {
-                //do what you want here
+              onTap: () async {
+                var url = Uri.https("wa.me", "/+5491124649778");
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
               },
               child:  const CircleAvatar(
                 backgroundColor: Color(0xFF25d366),
@@ -77,8 +81,11 @@ class _WovonAppState extends State<WovonApp> {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                //do what you want here
+              onTap: () async {
+                var url = Uri.https("t.me", "/wovonbot");
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
               },
               child:  const CircleAvatar(
                 backgroundColor: Color(0xFF0088cc),
