@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:wovon_app/colors/categories.dart';
 
 import '../gps.dart' as gps;
 import '../api/api.dart' as api;
-
-//TODO: Install Android dependencies for geolocation
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -46,7 +45,7 @@ class _MapPageState extends State<MapPage> {
           _incidents = value
               .map((i) => CircleMarker(
                   point: LatLng(i.latitude, i.longitude),
-                  color: Colors.red,
+                  color: Categories.getCategory(i.category).darkColor,
                   radius: MapPage.markerSize,
                   borderStrokeWidth: 3.0,
                   borderColor: Colors.white))
