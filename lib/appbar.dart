@@ -67,7 +67,7 @@ class _FilterListState extends State<_FilterList> {
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: ActionChip(
             side: const BorderSide(style: BorderStyle.none),
-            elevation: 5.0,
+            elevation: 2,
             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
             backgroundColor: selected![index] ? categories![index].darkColor : categories![index].lightColor,
             label: Text(

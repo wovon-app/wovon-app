@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../map/page.dart';
 import 'dashboard/page.dart';
 import 'appbar.dart';
+import 'package:custom_floating_action_button/custom_floating_action_button.dart';
 
 void main() {
   runApp(const WovonApp());
@@ -35,32 +36,60 @@ class _WovonAppState extends State<WovonApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'WovonApp',
-        theme: ThemeData(colorSchemeSeed: Colors.orange, useMaterial3: true),
+        theme: ThemeData(colorSchemeSeed: Colors.orange, useMaterial3: false),
         darkTheme: ThemeData(
             colorSchemeSeed: Colors.orange,
             useMaterial3: true,
             brightness: Brightness.dark),
         themeMode: ThemeMode.light,
-        home: Scaffold(
-          appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight * 2),
-            child: WovonAppBar(),
+        home: CustomFloatingActionButton(
+          body: Scaffold(
+            appBar: const PreferredSize(
+              preferredSize: Size.fromHeight(kToolbarHeight * 2),
+              child: WovonAppBar(),
+            ),
+            body: _pages[_selectedIndex],
+            bottomNavigationBar: NavigationBar(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: _onDestinationSelected,
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.dashboard),
+                  label: "Dashboard",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.map),
+                  label: "Map",
+                ),
+              ],
+            ),
           ),
-          body: _pages[_selectedIndex],
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onDestinationSelected,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.dashboard),
-                label: "Dashboard",
+          openFloatingActionButton: const Icon(Icons.add, color: Colors.white),
+          closeFloatingActionButton: const Icon(Icons.close, color: Colors.white),
+          options: [
+            GestureDetector(
+              onTap: () {
+                //do what you want here
+              },
+              child:  const CircleAvatar(
+                backgroundColor: Color(0xFF25d366),
+                child: Icon(Icons.whatsapp, color: Colors.white),
               ),
-              NavigationDestination(
-                icon: Icon(Icons.map),
-                label: "Map",
+            ),
+            GestureDetector(
+              onTap: () {
+                //do what you want here
+              },
+              child:  const CircleAvatar(
+                backgroundColor: Color(0xFF0088cc),
+                child: Icon(Icons.telegram, color: Colors.white),
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+          type: CustomFloatingActionButtonType.verticalUp,
+          floatinButtonColor: const Color(0xFFed701b),
+          backgroundColor: Colors.transparent,
+        )
+    );
   }
 }
