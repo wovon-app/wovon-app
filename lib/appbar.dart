@@ -19,10 +19,16 @@ class WovonAppBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const SizedBox(height: 8),
-              FractionallySizedBox(
-                widthFactor: 0.4,
-                child: Center(
-                  child: Image.asset('assets/images/logo_fc.png',),
+              SizedBox(
+                height: 48,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/logo_fc.png',
+                    ),
+                  ),
                 ),
               ),
               const _FilterList(),
@@ -51,8 +57,6 @@ class _FilterListState extends State<_FilterList> {
 
     setState(() {
       categories = Categories.getCategories();
-    });
-    setState(() {
       selected = [false, false, false, false, false, false];
     });
   }
@@ -61,33 +65,37 @@ class _FilterListState extends State<_FilterList> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Flexible(
-      child: Padding(
+      child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: ActionChip(
-              side: const BorderSide(style: BorderStyle.none),
-              elevation: 2,
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
-              backgroundColor: selected![index] ? categories![index].darkColor : categories![index].lightColor,
-              label: Text(
-                categories![index].name,
-                style: theme.textTheme.labelLarge!.copyWith(
-                  color: selected![index] ? const Color(0xFFFFFFFF) : categories![index].darkColor,
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  selected![index] = !selected![index];
-                });
-              },
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: ActionChip(
+            side: const BorderSide(style: BorderStyle.none),
+            elevation: 2,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
             ),
+            backgroundColor: selected![index]
+                ? categories![index].darkColor
+                : categories![index].lightColor,
+            label: Text(
+              categories![index].name,
+              style: theme.textTheme.labelLarge!.copyWith(
+                color: selected![index]
+                    ? const Color(0xFFFFFFFF)
+                    : categories![index].darkColor,
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                selected![index] = !selected![index];
+              });
+            },
           ),
-          itemCount: categories!.length,
         ),
-      )
+        itemCount: categories!.length,
+      ),
     );
   }
 }
