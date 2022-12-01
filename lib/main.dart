@@ -45,25 +45,57 @@ class _WovonAppState extends State<WovonApp> {
         themeMode: ThemeMode.light,
         home: CustomFloatingActionButton(
           body: Scaffold(
+            backgroundColor: Colors.black,
             appBar: const PreferredSize(
               preferredSize: Size.fromHeight(kToolbarHeight * 2),
               child: WovonAppBar(),
             ),
-            body: _pages[_selectedIndex],
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _onDestinationSelected,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.dashboard),
-                  label: "Dashboard",
+            body: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: const BoxDecoration(
+                    color: Colors.white, //new Color.fromRGBO(255, 0, 0, 0.0),
+                    borderRadius: BorderRadius.only(
+                        bottomLeft:  Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0)
+                    )
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.map),
-                  label: "Map",
+                child: _pages[_selectedIndex]
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.dashboard),
+                    label: ""
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.map_rounded),
+                    label: ""
                 ),
               ],
-            ),
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              backgroundColor: Colors.black,
+              selectedItemColor: const Color(0xFFed701b),
+              unselectedItemColor: Colors.white,
+              onTap: _onDestinationSelected,
+              currentIndex: _selectedIndex,
+            )
+
+
+            // NavigationBar(
+            //   selectedIndex: _selectedIndex,
+            //   onDestinationSelected: _onDestinationSelected,
+            //   destinations: const [
+            //     NavigationDestination(
+            //       icon: Icon(Icons.dashboard),
+            //       label: "Dashboard",
+            //     ),
+            //     NavigationDestination(
+            //       icon: Icon(Icons.map),
+            //       label: "Map",
+            //     ),
+            //   ],
+            // ),
           ),
           openFloatingActionButton: const Icon(Icons.add, color: Colors.white),
           closeFloatingActionButton: const Icon(Icons.close, color: Colors.white),
