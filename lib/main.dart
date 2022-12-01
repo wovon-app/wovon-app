@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../map/page.dart';
 import 'appbloc.dart';
@@ -8,6 +9,12 @@ import 'package:custom_floating_action_button/custom_floating_action_button.dart
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
   runApp(const WovonApp());
 }
 
