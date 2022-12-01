@@ -24,7 +24,9 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    update(List.empty());
+
+    final appState = context.read<AppBloc>().state;
+    update(appState.activeFilters);
   }
 
   void update(List<String> filters) {
