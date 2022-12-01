@@ -23,29 +23,40 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
 
-    gps.determinePosition().then((value) {
-      setState(() {
-        _gpsPos = value;
-      });
+    Future.wait([
+      gps.determinePosition().onError((error, stackTrace) {
+        showErrorDialog("Couldn't get GPS location", error.toString());
+        throw error!;
+      }),
+      api.getAllPosts().onError((error, stackTrace) {
+        showErrorDialog("Couldn't get posts", error.toString());
+        throw error!;
+      }),
+    ]).then((values) {
+      var pos = values[0] as Position;
+      var posts = values[1] as List<Wovpost>;
 
-      api.getAllPosts().then((posts) {
-        setState(() {
-          _wovposts = posts;
-        });
+      posts.sort((a, b) => _distanceTo(a, pos) - _distanceTo(b, pos));
+
+      setState(() {
+        _gpsPos = pos;
+        _wovposts = posts;
       });
-    }).onError((error, stackTrace) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text("Couldn't get GPS position"),
-                content: Text(error.toString()),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("OK"))
-                ],
-              ));
-    });
+    }).onError((error, stackTrace) => null);
+  }
+
+  void showErrorDialog(String title, String msg) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(msg),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: const Text("OK"))
+        ],
+      ),
+    );
   }
 
   @override
@@ -62,21 +73,20 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget incidentList() => Flexible(
-      child: ListView.builder(
+          child: ListView.builder(
         itemBuilder: (context, index) {
           var wovpost = _wovposts![index];
           return IncidentListItem(
-              post: wovpost, distance: _distanceTo(wovpost));
+              post: wovpost, distance: _distanceTo(wovpost, _gpsPos!));
         },
         itemCount: _wovposts!.length,
         padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
         clipBehavior: Clip.none,
         shrinkWrap: true,
-      )
-  );
+      ));
 
-  int _distanceTo(Wovpost wovpost) {
-    return Geolocator.distanceBetween(_gpsPos!.latitude, _gpsPos!.longitude,
+  int _distanceTo(Wovpost wovpost, Position currentPos) {
+    return Geolocator.distanceBetween(currentPos.latitude, currentPos.longitude,
             wovpost.latitude, wovpost.longitude)
         .toInt();
   }

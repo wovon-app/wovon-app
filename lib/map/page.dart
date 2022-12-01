@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:wovon_app/colors/categories.dart';
 
+import '../api/post.dart';
 import '../gps.dart' as gps;
 import '../api/api.dart' as api;
 
@@ -22,37 +24,24 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
-    gps
-        .determinePosition()
-        .then((value) => setState(() {
-              _gpsPos = LatLng(value.latitude, value.longitude);
-            }))
-        .onError((error, stackTrace) => {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: const Text("Couldn't get GPS position"),
-                        content: Text(error.toString()),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("OK"))
-                        ],
-                      ))
-            });
-
-    api.getAllPosts().then((value) => setState(() {
-          _incidents = value
-              .map((i) => CircleMarker(
-                  point: LatLng(i.latitude, i.longitude),
-                  color: Categories.getCategory(i.category).darkColor,
-                  radius: MapPage.markerSize,
-                  borderStrokeWidth: 3.0,
-                  borderColor: Colors.white))
-              .toList();
-        }));
-
     super.initState();
+
+    Future.wait([gps.determinePosition(), api.getAllPosts()]).then((value) {
+      var pos = value[0] as Position;
+      var posts = value[1] as List<Wovpost>;
+
+      setState(() {
+        _gpsPos = LatLng(pos.latitude, pos.longitude);
+        _incidents = posts
+            .map((i) => CircleMarker(
+                point: LatLng(i.latitude, i.longitude),
+                color: Categories.getCategory(i.category).darkColor,
+                radius: MapPage.markerSize,
+                borderStrokeWidth: 3.0,
+                borderColor: Colors.white))
+            .toList();
+      });
+    });
   }
 
   @override
