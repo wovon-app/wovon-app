@@ -29,8 +29,8 @@ class _DashboardPageState extends State<DashboardPage> {
     update(appState.activeFilters);
   }
 
-  void update(List<String> filters) {
-    Future.wait([
+  Future<void> update(List<String> filters) async {
+    await Future.wait([
       gps.determinePosition().onError((error, stackTrace) {
         showErrorDialog("Couldn't get GPS location", error.toString());
         throw error!;
@@ -88,16 +88,22 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget incidentList() => Flexible(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            var wovpost = _wovposts![index];
-            return IncidentListItem(
-                post: wovpost, distance: _distanceTo(wovpost, _gpsPos!));
+        child: RefreshIndicator(
+          onRefresh: () async {
+            api.clearCache();
+            await update(context.read<AppBloc>().state.activeFilters);
           },
-          itemCount: _wovposts!.length,
-          padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-          clipBehavior: Clip.none,
-          shrinkWrap: true,
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              var wovpost = _wovposts![index];
+              return IncidentListItem(
+                  post: wovpost, distance: _distanceTo(wovpost, _gpsPos!));
+            },
+            itemCount: _wovposts!.length,
+            padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+            clipBehavior: Clip.none,
+            shrinkWrap: true,
+          ),
         ),
       );
 

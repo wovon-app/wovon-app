@@ -47,3 +47,7 @@ Future<List<Wovpost>> getAllPosts() async {
 
   return pageCache.values.expand((e) => e).toList();
 }
+
+void clearCache() {
+  pageCache.clear();
+}
