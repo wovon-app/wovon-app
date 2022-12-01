@@ -35,115 +35,122 @@ class IncidentListItem extends StatelessWidget {
     return Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-        side: BorderSide(
+          side: BorderSide(
             color: Categories.getCategory(post.category).darkColor,
-            width: 2.0
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(8),
         ),
-        borderRadius: BorderRadius.circular(8)
-      ),
-      elevation: 3,
-      shadowColor: Categories.getCategory(post.category).darkColor,
-      clipBehavior: Clip.antiAlias,
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
+        elevation: 3,
+        shadowColor: Categories.getCategory(post.category).darkColor,
+        clipBehavior: Clip.antiAlias,
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(right: 8, bottom: 8),
                           child: Text(post.title, style: titleStyle),
+                        ),
+                      ),
+                      Text(_distanceString(), style: distanceStyle),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (post.image != null && post.image != "") ...[
+                        Expanded(
+                          child: Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surface,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6)),
+                            ),
+                            child: Image.network(
+                              post.image!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 150,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
                         )
-                    ),
-                    Text(_distanceString(), style: distanceStyle),
-                  ],
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (post.image != "") ...[
+                      ],
                       Expanded(
                         child: Container(
                           clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                              color: theme.colorScheme.surface,
-                              borderRadius: const BorderRadius.all(Radius.circular(6))
-                          ),
-                          child: Image.network(
-                            post.image!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 150,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      )
-                    ],
-                    Expanded(
-                      child: Container(
-                          clipBehavior: Clip.antiAlias,
                           height: 150,
                           decoration: BoxDecoration(
-                              color: theme.colorScheme.surface,
-                              borderRadius: const BorderRadius.all(Radius.circular(6))
+                            color: theme.colorScheme.surface,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(6)),
                           ),
                           child: IgnorePointer(
                             ignoring: true,
                             child: FlutterMap(
-                              options: MapOptions(absorbPanEventsOnScrollables: false, center: gpsLocation, zoom: 15),
+                              options: MapOptions(
+                                absorbPanEventsOnScrollables: false,
+                                center: gpsLocation,
+                                zoom: 15,
+                              ),
                               children: [
                                 TileLayer(
-                                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                    userAgentPackageName: 'app.wovon'
+                                  urlTemplate:
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName: 'app.wovon',
                                 ),
                                 CircleLayer(
                                   circles: [
                                     CircleMarker(
                                       point: gpsLocation,
-                                      color: Categories.getCategory(post.category).darkColor,
+                                      color:
+                                          Categories.getCategory(post.category)
+                                              .darkColor,
                                       borderColor: Colors.white,
                                       borderStrokeWidth: 2,
                                       radius: 8,
                                     ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
-                          )
-
+                          ),
+                        ),
                       ),
-                    )
-                  ],
-                )
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 30,
-            decoration: BoxDecoration(
-                color: Categories.getCategory(post.category).darkColor,
-                borderRadius: const BorderRadius.only(bottomRight: Radius.circular(6), bottomLeft: Radius.circular(6))
-            ),
-            child: Center(child: Text(post.category.toUpperCase(), style: categoryStyle))
-          ),
-        ],
-      )
-
-
-
-
-    );
+            Container(
+                width: double.infinity,
+                height: 30,
+                decoration: BoxDecoration(
+                    color: Categories.getCategory(post.category).darkColor,
+                    borderRadius: const BorderRadius.only(
+                        bottomRight: Radius.circular(6),
+                        bottomLeft: Radius.circular(6))),
+                child: Center(
+                    child: Text(post.category.toUpperCase(),
+                        style: categoryStyle))),
+          ],
+        ));
   }
 
   String _distanceString() {
