@@ -48,6 +48,19 @@ Future<List<Wovpost>> getAllPosts() async {
   return pageCache.values.expand((e) => e).toList();
 }
 
+Future<bool> postWovreport(String reportType, int wovpostId) async {
+  final response = await http.post(
+    Uri.parse('$apiUrl/post_wovreport?wovpostId=$wovpostId&reportName=$reportType'),
+    headers: <String, String>{
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return true;
+  } else {
+    return false;
+  }
+}
 void clearCache() {
   pageCache.clear();
 }
