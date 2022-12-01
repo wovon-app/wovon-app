@@ -95,22 +95,6 @@ class _WovonAppState extends State<WovonApp> {
               onTap: _onDestinationSelected,
               currentIndex: _selectedIndex,
             )
-
-
-            // NavigationBar(
-            //   selectedIndex: _selectedIndex,
-            //   onDestinationSelected: _onDestinationSelected,
-            //   destinations: const [
-            //     NavigationDestination(
-            //       icon: Icon(Icons.dashboard),
-            //       label: "Dashboard",
-            //     ),
-            //     NavigationDestination(
-            //       icon: Icon(Icons.map),
-            //       label: "Map",
-            //     ),
-            //   ],
-            // ),
           ),
           openFloatingActionButton: const Icon(Icons.add, color: Colors.white),
           closeFloatingActionButton: const Icon(Icons.close, color: Colors.white),
@@ -143,6 +127,8 @@ class _WovonAppState extends State<WovonApp> {
           type: CustomFloatingActionButtonType.verticalUp,
           floatinButtonColor: const Color(0xFFed701b),
           backgroundColor: Colors.transparent,
+          spaceFromBottom: 65,
+          spaceFromRight: 5,
         )
     );
   }
