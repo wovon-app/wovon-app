@@ -61,30 +61,33 @@ class _FilterListState extends State<_FilterList> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Flexible(
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: ActionChip(
-            side: const BorderSide(style: BorderStyle.none),
-            elevation: 2,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
-            backgroundColor: selected![index] ? categories![index].darkColor : categories![index].lightColor,
-            label: Text(
-              categories![index].name,
-              style: theme.textTheme.labelLarge!.copyWith(
-                color: selected![index] ? const Color(0xFFFFFFFF) : categories![index].darkColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: ActionChip(
+              side: const BorderSide(style: BorderStyle.none),
+              elevation: 2,
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
+              backgroundColor: selected![index] ? categories![index].darkColor : categories![index].lightColor,
+              label: Text(
+                categories![index].name,
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: selected![index] ? const Color(0xFFFFFFFF) : categories![index].darkColor,
+                ),
               ),
+              onPressed: () {
+                setState(() {
+                  selected![index] = !selected![index];
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                selected![index] = !selected![index];
-              });
-            },
           ),
+          itemCount: categories!.length,
         ),
-        itemCount: categories!.length,
-      ),
+      )
     );
   }
 }
