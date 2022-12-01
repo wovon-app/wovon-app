@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../map/page.dart';
+import 'appbloc.dart';
 import 'dashboard/page.dart';
 import 'appbar.dart';
 import 'package:custom_floating_action_button/custom_floating_action_button.dart';
@@ -36,7 +38,7 @@ class _WovonAppState extends State<WovonApp> {
   final colorScheme = const ColorScheme(
       brightness: Brightness.light,
       primary: Color(0xFFed701b),
-      onPrimary:  Color(0xFFed701b),
+      onPrimary: Color(0xFFed701b),
       secondary: Color(0xFF6b6b6b),
       onSecondary: Color(0xFF6b6b6b),
       error: Color(0xFFcb1a1a),
@@ -44,60 +46,50 @@ class _WovonAppState extends State<WovonApp> {
       background: Colors.white,
       onBackground: Colors.white,
       surface: Colors.black,
-      onSurface: Colors.black
-  );
+      onSurface: Colors.black);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return BlocProvider(
+      create: (_) => AppBloc(),
+      child: MaterialApp(
         title: 'WovonApp',
-        theme: ThemeData(
-            colorScheme: colorScheme,
-            useMaterial3: false),
-        darkTheme: ThemeData(
-            colorScheme: colorScheme,
-            useMaterial3: false),
+        theme: ThemeData(colorScheme: colorScheme, useMaterial3: false),
+        darkTheme: ThemeData(colorScheme: colorScheme, useMaterial3: false),
         themeMode: ThemeMode.light,
         home: CustomFloatingActionButton(
           body: Scaffold(
-            backgroundColor: Colors.black,
-            appBar: const PreferredSize(
-              preferredSize: Size.fromHeight(kToolbarHeight * 2),
-              child: WovonAppBar(),
-            ),
-            body: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(
-                    color: Colors.white, //new Color.fromRGBO(255, 0, 0, 0.0),
-                    borderRadius: BorderRadius.only(
-                        bottomLeft:  Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0)
-                    )
-                ),
-                child: _pages[_selectedIndex]
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.dashboard),
-                    label: ""
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.map_rounded),
-                    label: ""
-                ),
-              ],
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
               backgroundColor: Colors.black,
-              selectedItemColor: const Color(0xFFed701b),
-              unselectedItemColor: Colors.white,
-              onTap: _onDestinationSelected,
-              currentIndex: _selectedIndex,
-            )
-          ),
+              appBar: const PreferredSize(
+                preferredSize: Size.fromHeight(kToolbarHeight * 2),
+                child: WovonAppBar(),
+              ),
+              body: Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                      color: Colors.white, //new Color.fromRGBO(255, 0, 0, 0.0),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20.0),
+                          bottomRight: Radius.circular(20.0))),
+                  child: _pages[_selectedIndex]),
+              bottomNavigationBar: BottomNavigationBar(
+                items: const [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.dashboard), label: ""),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.map_rounded), label: ""),
+                ],
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                backgroundColor: Colors.black,
+                selectedItemColor: const Color(0xFFed701b),
+                unselectedItemColor: Colors.white,
+                onTap: _onDestinationSelected,
+                currentIndex: _selectedIndex,
+              )),
           openFloatingActionButton: const Icon(Icons.add, color: Colors.white),
-          closeFloatingActionButton: const Icon(Icons.close, color: Colors.white),
+          closeFloatingActionButton:
+              const Icon(Icons.close, color: Colors.white),
           options: [
             GestureDetector(
               onTap: () async {
@@ -106,7 +98,7 @@ class _WovonAppState extends State<WovonApp> {
                   await launchUrl(url, mode: LaunchMode.externalApplication);
                 }
               },
-              child:  const CircleAvatar(
+              child: const CircleAvatar(
                 backgroundColor: Color(0xFF25d366),
                 child: Icon(Icons.whatsapp, color: Colors.white),
               ),
@@ -118,7 +110,7 @@ class _WovonAppState extends State<WovonApp> {
                   await launchUrl(url, mode: LaunchMode.externalApplication);
                 }
               },
-              child:  const CircleAvatar(
+              child: const CircleAvatar(
                 backgroundColor: Color(0xFF0088cc),
                 child: Icon(Icons.telegram, color: Colors.white),
               ),
@@ -129,7 +121,8 @@ class _WovonAppState extends State<WovonApp> {
           backgroundColor: Colors.transparent,
           spaceFromBottom: 65,
           spaceFromRight: 5,
-        )
+        ),
+      ),
     );
   }
 }

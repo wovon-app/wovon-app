@@ -33,11 +33,9 @@ class Wovpost {
 class ApiCategory {
   final String name;
 
-  const ApiCategory({
-    required this.name
-  });
+  const ApiCategory({required this.name});
 
-  factory ApiCategory.fromJson (Map<String,dynamic> json) {
+  factory ApiCategory.fromJson(Map<String, dynamic> json) {
     return ApiCategory(name: json['name'] as String);
   }
 }

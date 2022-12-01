@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../api/post.dart';
 import 'package:geolocator/geolocator.dart';
+import '../appbloc.dart';
 import 'incident_list_item.dart';
 import '../api/api.dart' as api;
 import '../gps.dart' as gps;
@@ -22,7 +24,10 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+    update(List.empty());
+  }
 
+  void update(List<String> filters) {
     Future.wait([
       gps.determinePosition().onError((error, stackTrace) {
         showErrorDialog("Couldn't get GPS location", error.toString());
@@ -37,6 +42,9 @@ class _DashboardPageState extends State<DashboardPage> {
       var posts = values[1] as List<Wovpost>;
 
       posts.sort((a, b) => _distanceTo(a, pos) - _distanceTo(b, pos));
+      if (filters.isNotEmpty) {
+        posts.retainWhere((post) => filters.contains(post.category));
+      }
 
       setState(() {
         _gpsPos = pos;
@@ -65,25 +73,31 @@ class _DashboardPageState extends State<DashboardPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [incidentList()],
+    return BlocListener<AppBloc, AppState>(
+      listener: (context, state) {
+        update(state.activeFilters);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [incidentList()],
+      ),
     );
   }
 
   Widget incidentList() => Flexible(
-          child: ListView.builder(
-        itemBuilder: (context, index) {
-          var wovpost = _wovposts![index];
-          return IncidentListItem(
-              post: wovpost, distance: _distanceTo(wovpost, _gpsPos!));
-        },
-        itemCount: _wovposts!.length,
-        padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-        clipBehavior: Clip.none,
-        shrinkWrap: true,
-      ));
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            var wovpost = _wovposts![index];
+            return IncidentListItem(
+                post: wovpost, distance: _distanceTo(wovpost, _gpsPos!));
+          },
+          itemCount: _wovposts!.length,
+          padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+          clipBehavior: Clip.none,
+          shrinkWrap: true,
+        ),
+      );
 
   int _distanceTo(Wovpost wovpost, Position currentPos) {
     return Geolocator.distanceBetween(currentPos.latitude, currentPos.longitude,
