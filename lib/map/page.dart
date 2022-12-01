@@ -63,12 +63,8 @@ class _MapPageState extends State<MapPage> {
 
     return FlutterMap(
       options: MapOptions(center: _gpsPos, zoom: 15),
-      nonRotatedChildren: [
-        attribution(),
-      ],
       children: [
         TileLayer(
-            // urlTemplate: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'app.wovon'),
         CircleLayer(
@@ -85,16 +81,5 @@ class _MapPageState extends State<MapPage> {
         )
       ],
     );
-  }
-
-  Widget attribution() {
-    return AttributionWidget(attributionBuilder: (context) {
-      return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(5)),
-              color: Color.fromRGBO(255, 255, 255, 0.75)),
-          child: const Text('© OpenStreetMap contributors'));
-    });
   }
 }

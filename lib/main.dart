@@ -33,15 +33,30 @@ class _WovonAppState extends State<WovonApp> {
     });
   }
 
+  final colorScheme = const ColorScheme(
+      brightness: Brightness.light,
+      primary: Color(0xFFed701b),
+      onPrimary:  Color(0xFFed701b),
+      secondary: Color(0xFF6b6b6b),
+      onSecondary: Color(0xFF6b6b6b),
+      error: Color(0xFFcb1a1a),
+      onError: Color(0xFFcb1a1a),
+      background: Colors.white,
+      onBackground: Colors.white,
+      surface: Colors.black,
+      onSurface: Colors.black
+  );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'WovonApp',
-        theme: ThemeData(colorSchemeSeed: Colors.orange, useMaterial3: false),
+        theme: ThemeData(
+            colorScheme: colorScheme,
+            useMaterial3: false),
         darkTheme: ThemeData(
-            colorSchemeSeed: Colors.orange,
-            useMaterial3: true,
-            brightness: Brightness.dark),
+            colorScheme: colorScheme,
+            useMaterial3: false),
         themeMode: ThemeMode.light,
         home: CustomFloatingActionButton(
           body: Scaffold(

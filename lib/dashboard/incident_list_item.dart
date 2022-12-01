@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:wovon_app/api/post.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:wovon_app/colors/categories.dart';
 
 class IncidentListItem extends StatelessWidget {
@@ -27,6 +29,8 @@ class IncidentListItem extends StatelessWidget {
       fontSize: 12.0,
       color: Colors.white,
     );
+
+    final gpsLocation = LatLng(post.latitude, post.longitude);
 
     return Card(
         color: Colors.white,
@@ -61,19 +65,66 @@ class IncidentListItem extends StatelessWidget {
                     Text(_distanceString(), style: distanceStyle),
                   ],
                 ),
-                Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: const BorderRadius.all(Radius.circular(6))
-                  ),
-                  child: Image.network(
-                    "https://media.npr.org/assets/img/2021/06/08/20210607_184450-2e240569e1dc66bcff31f74bc88fb1d5c301686b.jpg",
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: 200,
-                  ),
-                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (post.image != "") ...[
+                      Expanded(
+                        child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                              color: theme.colorScheme.surface,
+                              borderRadius: const BorderRadius.all(Radius.circular(6))
+                          ),
+                          child: Image.network(
+                            post.image!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 150,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      )
+                    ],
+                    Expanded(
+                      child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          height: 150,
+                          decoration: BoxDecoration(
+                              color: theme.colorScheme.surface,
+                              borderRadius: const BorderRadius.all(Radius.circular(6))
+                          ),
+                          child: IgnorePointer(
+                            ignoring: true,
+                            child: FlutterMap(
+                              options: MapOptions(absorbPanEventsOnScrollables: false, center: gpsLocation, zoom: 15),
+                              children: [
+                                TileLayer(
+                                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    userAgentPackageName: 'app.wovon'
+                                ),
+                                CircleLayer(
+                                  circles: [
+                                    CircleMarker(
+                                      point: gpsLocation,
+                                      color: Categories.getCategory(post.category).darkColor,
+                                      borderColor: Colors.white,
+                                      borderStrokeWidth: 2,
+                                      radius: 8,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),
