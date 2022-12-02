@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import 'post.dart';
 
-const apiUrl = "http://wovon.westus3.cloudapp.azure.com";
+const apiUrl = "https://wovon.me/api";
 const apiToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbGI2dnI3aHcwMDYwMHRwaTJ1YWQ4Mzd6IiwicGVybWlzc2lvbkxldmVsIjoiMiIsImlhdCI6MTY3MDAwODE4Nn0.py1UA6NX7dXMbishEdncc1YoWh9ITWjK1KzpyvRTsM0";
 const maxPages = 100;
