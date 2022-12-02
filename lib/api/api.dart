@@ -1,19 +1,31 @@
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'dart:convert';
 import 'post.dart';
 
 const apiUrl = "http://wovon.westus3.cloudapp.azure.com";
+const apiToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbGI2dnI3aHcwMDYwMHRwaTJ1YWQ4Mzd6IiwicGVybWlzc2lvbkxldmVsIjoiMiIsImlhdCI6MTY3MDAwODE4Nn0.py1UA6NX7dXMbishEdncc1YoWh9ITWjK1KzpyvRTsM0";
 const maxPages = 100;
 
 final pageCache = <int, List<Wovpost>>{};
+
+Future<Response> _apiGet(String url) async {
+  return await http.get(Uri.parse('$apiUrl$url'),
+      headers: {"Authorization": "bearer $apiToken"});
+}
+
+Future<Response> _apiPost(String url) async {
+  return await http.post(Uri.parse('$apiUrl$url'),
+      headers: {"Authorization": "bearer $apiToken"});
+}
 
 Future<List<Wovpost>> getPostsPage(int page) async {
   if (pageCache.containsKey(page)) {
     return pageCache[page]!;
   }
 
-  final response =
-      await http.get(Uri.parse('$apiUrl/get_all_wovposts?page=$page'));
+  final response = await _apiGet("/get_all_wovposts?page=$page");
 
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
@@ -49,11 +61,8 @@ Future<List<Wovpost>> getAllPosts() async {
 }
 
 Future<bool> postWovreport(String reportType, int wovpostId) async {
-  final response = await http.post(
-    Uri.parse('$apiUrl/post_wovreport?wovpostId=$wovpostId&reportName=$reportType'),
-    headers: <String, String>{
-    },
-  );
+  final response = await _apiPost(
+      "/post_wovreport?wovpostId=$wovpostId&reportName=$reportType");
 
   if (response.statusCode == 200) {
     return true;
@@ -61,6 +70,7 @@ Future<bool> postWovreport(String reportType, int wovpostId) async {
     return false;
   }
 }
+
 void clearCache() {
   pageCache.clear();
 }
