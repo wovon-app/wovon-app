@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_strategy/url_strategy.dart';
 import '../map/page.dart';
 import 'appbloc.dart';
 import 'dashboard/page.dart';
@@ -15,6 +16,7 @@ void main() {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
+  setPathUrlStrategy();
   runApp(const WovonApp());
 }
 
