@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 import '../api/post.dart';
 import 'package:geolocator/geolocator.dart';
 import '../appbloc.dart';
@@ -89,22 +90,31 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget incidentList() => Flexible(
         child: RefreshIndicator(
-          onRefresh: () async {
-            api.clearCache();
-            await update(context.read<AppBloc>().state.activeFilters);
-          },
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              var wovpost = _wovposts![index];
-              return IncidentListItem(
-                  post: wovpost, distance: _distanceTo(wovpost, _gpsPos!));
+            onRefresh: () async {
+              api.clearCache();
+              await update(context.read<AppBloc>().state.activeFilters);
             },
-            itemCount: _wovposts!.length,
-            padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-            clipBehavior: Clip.none,
-            shrinkWrap: true,
-          ),
-        ),
+            child: ResponsiveGridList(
+              desiredItemWidth: 300,
+              minSpacing: 10,
+              children: [..._wovposts!]
+                  .map((p) => IncidentListItem(
+                      post: p, distance: _distanceTo(p, _gpsPos!)))
+                  .toList(),
+            )
+
+            // child: ListView.builder(
+            //   itemBuilder: (context, index) {
+            //     var wovpost = _wovposts![index];
+            //     return IncidentListItem(
+            //         post: wovpost, distance: _distanceTo(wovpost, _gpsPos!));
+            //   },
+            //   itemCount: _wovposts!.length,
+            //   padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+            //   clipBehavior: Clip.none,
+            //   shrinkWrap: true,
+            // ),
+            ),
       );
 
   int _distanceTo(Wovpost wovpost, Position currentPos) {
